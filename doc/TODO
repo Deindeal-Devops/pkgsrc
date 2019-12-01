@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.19486 2019/11/26 13:11:06 wiz Exp $
+$NetBSD: TODO,v 1.19489 2019/12/01 04:23:28 kim Exp $
 
 Suggested new packages
 ======================
@@ -388,7 +388,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o R-akima-11
 	o R-mapproj-3
 	o R-ncdf-1.6.8
-	o Sigil-0.9.17 [needs QtWebEngine]
+	o Sigil-0.9.18 [needs QtWebEngine]
 	o TiffIO-140a
 	o YoSucker-81
 	o abcmidi-20170416
@@ -1024,7 +1024,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o pcc-current-20160305
 	o pdmenu-1.2.87
 	o pessulus-2.30.3
-	o pflogsumm-1.1.5
 	o pgadmin4-1.0
 	o pgbuildfarm-4.17
 	o php-basercms-4.0.0
@@ -1042,8 +1041,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o php-tt-rss-1.15.3
 	o php-tt-rss-fever-plugin-1.4.7
 	o php-xdebug-2.8.0
-	o php72-7.2.23
-	o php73-7.3.10
 	o phraseanet-3.8.6
 	o phraseanet-indexer-3.8.6
 	o picocom-3.0
@@ -1249,7 +1246,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o tomboy-1.10.2
 	o top-3.8beta1
 	o topgit-0.8
-	o tor-browser-9.0
+	o tor-browser-9.0.1
 	o totem-3.14.1
 	o totem-pl-parser-3.10.3
 	o tripwire-2.3.1 [see also pkg/22362]

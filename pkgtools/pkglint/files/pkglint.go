@@ -201,8 +201,7 @@ func (pkglint *Pkglint) setUpProfiling() func() {
 func (pkglint *Pkglint) prepareMainLoop() {
 	firstDir := pkglint.Todo.Front()
 	if firstDir.IsFile() {
-		// FIXME: consider DirNoClean
-		firstDir = firstDir.DirClean()
+		firstDir = firstDir.DirNoClean()
 	}
 
 	relTopdir := findPkgsrcTopdir(firstDir)
@@ -314,18 +313,19 @@ func (pkglint *Pkglint) checkMode(dirent CurrPath, mode os.FileMode) {
 
 	dir := dirent
 	if !isDir {
-		// FIXME: consider DirNoClean
-		dir = dirent.DirClean()
+		dir = dirent.DirNoClean()
 	}
 
 	basename := dirent.Base()
-	pkgsrcRel := pkglint.Pkgsrc.ToRel(dirent)
+	pkgsrcRel := pkglint.Pkgsrc.Rel(dirent)
 
 	pkglint.Wip = pkgsrcRel.HasPrefixPath("wip")
 	pkglint.Infrastructure = pkgsrcRel.HasPrefixPath("mk")
 	pkgsrcdir := findPkgsrcTopdir(dir)
 	if pkgsrcdir.IsEmpty() {
-		NewLineWhole(dirent).Errorf("Cannot determine the pkgsrc root directory for %q.", dir.CleanPath())
+		G.Logger.TechErrorf("",
+			"Cannot determine the pkgsrc root directory for %q.",
+			dirent)
 		return
 	}
 
@@ -360,15 +360,12 @@ func (pkglint *Pkglint) checkdirPackage(dir CurrPath) {
 
 	pkglint.Pkg = NewPackage(dir)
 	defer func() { pkglint.Pkg = nil }()
-	pkg := pkglint.Pkg
-
-	files, mklines, allLines := pkg.load()
-	pkg.check(files, mklines, allLines)
+	pkglint.Pkg.Check()
 }
 
 // Returns the pkgsrc top-level directory, relative to the given directory.
-func findPkgsrcTopdir(dirname CurrPath) Path {
-	for _, dir := range [...]Path{".", "..", "../..", "../../.."} {
+func findPkgsrcTopdir(dirname CurrPath) RelPath {
+	for _, dir := range [...]RelPath{".", "..", "../..", "../../.."} {
 		if dirname.JoinNoClean(dir).JoinNoClean("mk/bsd.pkg.mk").IsFile() {
 			return dir
 		}
@@ -395,7 +392,8 @@ func resolveVariableRefs(mklines *MkLines, text string) (resolved string) {
 				}
 			}
 			if mklines != nil {
-				if value, ok := mklines.vars.LastValueFound(varname); ok {
+				// TODO: At load time, use mklines.loadVars instead.
+				if value, ok := mklines.allVars.LastValueFound(varname); ok {
 					return value
 				}
 			}
@@ -432,20 +430,26 @@ func CheckLinesDescr(lines *Lines) {
 		defer trace.Call(lines.Filename)()
 	}
 
+	checkVarRefs := func(line *Line) {
+		tokens, _ := NewMkLexer(line.Text, nil).MkTokens()
+		for _, token := range tokens {
+			switch {
+			case token.Varuse == nil,
+				!hasPrefix(token.Text, "${"),
+				G.Pkgsrc.VariableType(nil, token.Varuse.varname) == nil:
+			default:
+				line.Notef("Variables like %q are not expanded in the DESCR file.",
+					token.Text)
+			}
+		}
+	}
+
 	for _, line := range lines.Lines {
 		ck := LineChecker{line}
 		ck.CheckLength(80)
 		ck.CheckTrailingWhitespace()
 		ck.CheckValidCharacters()
-
-		if containsVarRef(line.Text) {
-			tokens, _ := NewMkLexer(line.Text, nil).MkTokens()
-			for _, token := range tokens {
-				if token.Varuse != nil && G.Pkgsrc.VariableType(nil, token.Varuse.varname) != nil {
-					line.Notef("Variables are not expanded in the DESCR file.")
-				}
-			}
-		}
+		checkVarRefs(line)
 	}
 
 	CheckLinesTrailingEmptyLines(lines)
@@ -544,8 +548,7 @@ func CheckFileMk(filename CurrPath) {
 func (pkglint *Pkglint) checkReg(filename CurrPath, basename string, depth int) {
 
 	if depth == 3 && !pkglint.Wip {
-		// FIXME: There's no good reason for prohibiting a README file.
-		if contains(basename, "README") || contains(basename, "TODO") {
+		if contains(basename, "TODO") {
 			NewLineWhole(filename).Errorf("Packages in main pkgsrc must not have a %s file.", basename)
 			// TODO: Add a convincing explanation.
 			return
@@ -556,7 +559,6 @@ func (pkglint *Pkglint) checkReg(filename CurrPath, basename string, depth int) 
 	case hasSuffix(basename, "~"),
 		hasSuffix(basename, ".orig"),
 		hasSuffix(basename, ".rej"),
-		contains(basename, "README") && depth == 3,
 		contains(basename, "TODO") && depth == 3:
 		if pkglint.Opts.Import {
 			NewLineWhole(filename).Errorf("Must be cleaned up before committing the package.")
@@ -601,20 +603,16 @@ func (pkglint *Pkglint) checkReg(filename CurrPath, basename string, depth int) 
 			CheckLinesPatch(lines)
 		}
 
-		// FIXME: consider DirNoClean
-	case filename.DirClean().Base() == "patches" && matches(filename.Base(), `^manual[^/]*$`):
+	case filename.DirNoClean().Base() == "patches" && matches(filename.Base(), `^manual[^/]*$`):
 		if trace.Tracing {
 			trace.Stepf("Unchecked file %q.", filename)
 		}
 
-		// FIXME: consider DirNoClean
-	case filename.DirClean().Base() == "patches":
+	case filename.DirNoClean().Base() == "patches":
 		NewLineWhole(filename).Warnf("Patch files should be named \"patch-\", followed by letters, '-', '_', '.', and digits only.")
 
 	case (hasPrefix(basename, "Makefile") || hasSuffix(basename, ".mk")) &&
-		// FIXME: consider DirNoClean
-		// FIXME: G.Pkgsrc.Rel(filename) instead of filename
-		!filename.DirClean().ContainsPath("files"):
+		!G.Pkgsrc.Rel(filename).AsPath().ContainsPath("files"):
 		CheckFileMk(filename)
 
 	case hasPrefix(basename, "PLIST"):
@@ -622,16 +620,18 @@ func (pkglint *Pkglint) checkReg(filename CurrPath, basename string, depth int) 
 			CheckLinesPlist(G.Pkg, lines)
 		}
 
+	case contains(basename, "README"):
+		break
+
 	case hasPrefix(basename, "CHANGES-"):
 		// This only checks the file but doesn't register the changes globally.
 		_ = pkglint.Pkgsrc.loadDocChangesFromFile(filename)
 
-		// FIXME: consider DirNoClean
-	case filename.DirClean().Base() == "files":
+	case filename.DirNoClean().Base() == "files":
 		// Skip files directly in the files/ directory, but not those further down.
 
 	case basename == "spec":
-		if !pkglint.Pkgsrc.ToRel(filename).HasPrefixPath("regress") {
+		if !pkglint.Pkgsrc.Rel(filename).HasPrefixPath("regress") {
 			NewLineWhole(filename).Warnf("Only packages in regress/ may have spec files.")
 		}
 
@@ -733,7 +733,6 @@ func (pkglint *Pkglint) tools(mklines *MkLines) *Tools {
 }
 
 func (pkglint *Pkglint) loadCvsEntries(filename CurrPath) map[string]CvsEntry {
-	// FIXME: consider DirNoClean
 	dir := filename.DirClean()
 	if dir == pkglint.cvsEntriesDir {
 		return pkglint.cvsEntries
@@ -786,7 +785,7 @@ func (pkglint *Pkglint) loadCvsEntries(filename CurrPath) map[string]CvsEntry {
 
 func (pkglint *Pkglint) Abs(filename CurrPath) CurrPath {
 	if !filename.IsAbs() {
-		return pkglint.cwd.JoinNoClean(filename.AsPath()).Clean()
+		return pkglint.cwd.JoinNoClean(NewRelPath(filename.AsPath())).Clean()
 	}
 	return filename.Clean()
 }
@@ -806,7 +805,7 @@ func (ip *InterPackage) Enable() {
 
 func (ip *InterPackage) Enabled() bool { return ip.hashes != nil }
 
-func (ip *InterPackage) Hash(alg string, filename Path, hashBytes []byte, loc *Location) *Hash {
+func (ip *InterPackage) Hash(alg string, filename RelPath, hashBytes []byte, loc *Location) *Hash {
 	key := alg + ":" + filename.String()
 	if otherHash := ip.hashes[key]; otherHash != nil {
 		return otherHash

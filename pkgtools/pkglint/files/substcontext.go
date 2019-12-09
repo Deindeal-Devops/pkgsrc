@@ -142,13 +142,13 @@ func (ctx *SubstContext) Varassign(mkline *MkLine) {
 			fix.Replace("pre-patch", "post-extract")
 			fix.Replace("post-patch", "pre-configure")
 			fix.Apply()
-			// FIXME: Add test that has "SUBST_STAGE.id=pre-patch # or rather post-patch?"
+			// XXX: Add test that has "SUBST_STAGE.id=pre-patch # or rather post-patch?"
 		}
 
 		if G.Pkg != nil && (value == "pre-configure" || value == "post-configure") {
 			if noConfigureLine := G.Pkg.vars.FirstDefinition("NO_CONFIGURE"); noConfigureLine != nil {
 				mkline.Warnf("SUBST_STAGE %s has no effect when NO_CONFIGURE is set (in %s).",
-					value, mkline.RefTo(noConfigureLine))
+					value, mkline.RelMkLine(noConfigureLine))
 				mkline.Explain(
 					"To fix this properly, remove the definition of NO_CONFIGURE.")
 			}

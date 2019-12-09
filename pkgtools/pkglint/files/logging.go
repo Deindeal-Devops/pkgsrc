@@ -8,6 +8,17 @@ import (
 	"strings"
 )
 
+// Diagnoser provides the standard way of producing errors, warnings
+// and notes, and explanations for them.
+//
+// For convenience, it is implemented by several types in pkglint.
+type Diagnoser interface {
+	Errorf(format string, args ...interface{})
+	Warnf(format string, args ...interface{})
+	Notef(format string, args ...interface{})
+	Explain(explanation ...string)
+}
+
 type Logger struct {
 	Opts LoggerOpts
 
@@ -93,7 +104,19 @@ func (l *Logger) Explain(explanation ...string) {
 //
 // See Logf for logging arbitrary messages.
 func (l *Logger) Diag(line *Line, level *LogLevel, format string, args ...interface{}) {
-	if l.IsAutofix() {
+	if G.Testing {
+		for _, arg := range args {
+			switch arg.(type) {
+			case int, string, error:
+			default:
+				// All paths in diagnostics must be relative to the line.
+				// To achieve that, call line.File(currPath).
+				_ = arg.(RelPath)
+			}
+		}
+	}
+
+	if l.IsAutofix() && level != Fatal {
 		// In these two cases, the only interesting diagnostics are those that can
 		// be fixed automatically. These are logged by Autofix.Apply.
 		l.suppressExpl = true
@@ -232,6 +255,15 @@ func (l *Logger) Logf(level *LogLevel, filename CurrPath, lineno, format, msg st
 		return
 	}
 
+	if G.Testing {
+		if level != Error {
+			assertf(!contains(format, "must"), "Must must only appear in errors: %s", format)
+		}
+		if level != Warn && level != Note {
+			assertf(!contains(format, "should"), "Should must only appear in warnings: %s", format)
+		}
+	}
+
 	if G.Testing && format != AutofixFormat {
 		if textproc.Alpha.Contains(format[0]) {
 			assertf(
@@ -282,17 +314,20 @@ func (l *Logger) Logf(level *LogLevel, filename CurrPath, lineno, format, msg st
 
 // TechErrorf logs a technical error on the error output.
 //
-// location must be a slash-separated filename, such as the one in
-// Location.Filename. It may be followed by the usual ":123" for line numbers.
-//
 // For diagnostics, use Logf instead.
 func (l *Logger) TechErrorf(location CurrPath, format string, args ...interface{}) {
 	msg := sprintf(format, args...)
+
+	locationStr := ""
+	if !location.IsEmpty() {
+		locationStr = location.String() + ": "
+	}
+
 	var diag string
 	if l.Opts.GccOutput {
-		diag = sprintf("%s: %s: %s\n", location, Error.GccName, msg)
+		diag = sprintf("%s%s: %s\n", locationStr, Error.GccName, msg)
 	} else {
-		diag = sprintf("%s: %s: %s\n", Error.TraditionalName, location, msg)
+		diag = sprintf("%s: %s%s\n", Error.TraditionalName, locationStr, msg)
 	}
 	l.err.Write(escapePrintable(diag))
 }

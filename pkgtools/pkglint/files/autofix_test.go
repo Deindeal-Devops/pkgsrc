@@ -146,7 +146,7 @@ func (s *Suite) Test_Autofix__lonely_source(c *check.C) {
 		".include \"../../x11/xorgproto/buildlink3.mk\"")
 	t.SetUpPackage("x11/xorgproto",
 		"DISTNAME=\txorgproto-1.0")
-	t.CreateFileDummyBuildlink3("x11/xorgproto/buildlink3.mk")
+	t.CreateFileBuildlink3("x11/xorgproto/buildlink3.mk")
 	t.CreateFileLines("x11/xorgproto/builtin.mk",
 		MkCvsID,
 		"",
@@ -164,7 +164,8 @@ func (s *Suite) Test_Autofix__lonely_source(c *check.C) {
 
 	t.CheckOutputLines(
 		">\tPRE_XORGPROTO_LIST_MISSING =\tapplewmproto",
-		"NOTE: x11/xorgproto/builtin.mk:5: Unnecessary space after variable name \"PRE_XORGPROTO_LIST_MISSING\".")
+		"NOTE: x11/xorg-cf-files/../../x11/xorgproto/builtin.mk:5: "+
+			"Unnecessary space after variable name \"PRE_XORGPROTO_LIST_MISSING\".")
 }
 
 // Up to 2018-11-26, pkglint in some cases logged only the source without
@@ -176,6 +177,9 @@ func (s *Suite) Test_Autofix__lonely_source_2(c *check.C) {
 	G.Logger.verbose = false // For realistic conditions; otherwise all diagnostics are logged.
 
 	t.SetUpPackage("print/tex-bibtex8",
+		"# Including bsd.prefs.mk is not necessary here since",
+		"# PKGSRC_COMPILER is evaluated lazily.",
+		"",
 		"MAKE_FLAGS+=\tCFLAGS=${CFLAGS.${PKGSRC_COMPILER}}")
 	t.Chdir(".")
 	t.FinishSetUp()
@@ -184,13 +188,13 @@ func (s *Suite) Test_Autofix__lonely_source_2(c *check.C) {
 
 	t.CheckOutputLines(
 		">\tMAKE_FLAGS+=\tCFLAGS=${CFLAGS.${PKGSRC_COMPILER}}",
-		"WARN: print/tex-bibtex8/Makefile:20: Please use ${CFLAGS.${PKGSRC_COMPILER}:Q} instead of ${CFLAGS.${PKGSRC_COMPILER}}.",
+		"WARN: print/tex-bibtex8/Makefile:23: Please use ${CFLAGS.${PKGSRC_COMPILER}:Q} instead of ${CFLAGS.${PKGSRC_COMPILER}}.",
 		"",
 		"\tSee the pkgsrc guide, section \"Echoing a string exactly as-is\":",
 		"\thttps://www.NetBSD.org/docs/pkgsrc/pkgsrc.html#echo-literal",
 		"",
 		">\tMAKE_FLAGS+=\tCFLAGS=${CFLAGS.${PKGSRC_COMPILER}}",
-		"WARN: print/tex-bibtex8/Makefile:20: The list variable PKGSRC_COMPILER should not be embedded in a word.",
+		"WARN: print/tex-bibtex8/Makefile:23: The list variable PKGSRC_COMPILER should not be embedded in a word.",
 		"",
 		"\tWhen a list variable has multiple elements, this expression expands",
 		"\tto something unexpected:",
@@ -554,7 +558,7 @@ func (s *Suite) Test_Autofix_ReplaceAt(c *check.C) {
 	lines := func(lines ...string) []string { return lines }
 	test := func(texts []string, rawIndex int, column int, from, to string, diagnostics ...string) {
 
-		mainPart := func() {
+		mainPart := func(autofix bool) {
 			mklines := t.NewMkLines("filename.mk", texts...)
 			assert(len(mklines.mklines) == 1)
 			mkline := mklines.mklines[0]

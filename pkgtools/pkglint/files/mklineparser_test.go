@@ -545,7 +545,7 @@ func (s *Suite) Test_MkLineParser_parseInclude(c *check.C) {
 	t.CheckEquals(mkline.IsInclude(), true)
 	t.CheckEquals(mkline.Indent(), "    ")
 	t.CheckEquals(mkline.MustExist(), true)
-	t.CheckEquals(mkline.IncludedFile(), NewPath("../../mk/bsd.prefs.mk"))
+	t.CheckEquals(mkline.IncludedFile(), NewRelPathString("../../mk/bsd.prefs.mk"))
 
 	t.CheckEquals(mkline.IsSysinclude(), false)
 }
@@ -559,7 +559,7 @@ func (s *Suite) Test_MkLineParser_parseSysinclude(c *check.C) {
 	t.CheckEquals(mkline.IsSysinclude(), true)
 	t.CheckEquals(mkline.Indent(), "    ")
 	t.CheckEquals(mkline.MustExist(), true)
-	t.CheckEquals(mkline.IncludedFile(), NewPath("subdir.mk"))
+	t.CheckEquals(mkline.IncludedFile(), NewRelPathString("subdir.mk"))
 
 	t.CheckEquals(mkline.IsInclude(), false)
 }
@@ -913,7 +913,7 @@ func (s *Suite) Test_MkLineParser_split(c *check.C) {
 			comment:            " comment after spaces",
 		})
 
-	// FIXME: This theoretical edge case is interpreted differently
+	// XXX: This theoretical edge case is interpreted differently
 	//  between bmake and pkglint. Pkglint treats the # as a comment,
 	//  while bmake interprets it as a regular character.
 	test("\\[#",

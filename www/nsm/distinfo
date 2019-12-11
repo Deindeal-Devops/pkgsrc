@@ -1,6 +1,6 @@
-$NetBSD: distinfo,v 1.3 2019/11/29 22:03:38 ng0 Exp $
+$NetBSD: distinfo,v 1.5 2019/12/11 15:56:05 ng0 Exp $
 
-SHA1 (nsm-1.21.tar.gz) = 56965387526f2bf75a6f8600d7dd7bfc55e70b9a
-RMD160 (nsm-1.21.tar.gz) = ce64012ce214b91850bb4d21120cecaecaf79a33
-SHA512 (nsm-1.21.tar.gz) = 17307b78b5b084237c5a5b8f93dc53be0c36d74f6bd8d43902bc56a310f97c129e74fa3f79e178d66328af4efb5fd6e62753e2a0ff1bd35762e99bbbcd5d0002
-Size (nsm-1.21.tar.gz) = 35080 bytes
+SHA1 (nsm-1.24.tar.gz) = 4770bd39cfa061a31dcb0757ce296e345c847bf4
+RMD160 (nsm-1.24.tar.gz) = ff6fdb39d370ac2afc4422447565e365f54548e2
+SHA512 (nsm-1.24.tar.gz) = 1f3f02208aabc694ccec32a1158f5e5fb13cd28643220ac94b3c6e1d45d9ce60594fd5194d1245b5533d685fb1500b0cac5c1aee575494d8a39362f228abe210
+Size (nsm-1.24.tar.gz) = 46744 bytes

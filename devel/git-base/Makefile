@@ -1,9 +1,8 @@
-# $NetBSD: Makefile,v 1.71 2019/11/26 10:22:17 wiz Exp $
+# $NetBSD: Makefile,v 1.73 2019/12/11 14:54:25 leot Exp $
 
 .include "../../devel/git/Makefile.common"
 
 PKGNAME=	git-base-${GIT_VERSION}
-PKGREVISION=	1
 COMMENT=	GIT Tree History Storage Tool (base package)
 
 CONFLICTS+=	scmgit-base-[0-9]*
@@ -16,7 +15,7 @@ DEPENDS+=	p5-Net-SMTP-SSL>=1.01:../../mail/p5-Net-SMTP-SSL
 DEPENDS+=	p5-Authen-SASL>=1.0:../../security/p5-Authen-SASL
 
 USE_LANGUAGES=		c99
-USE_TOOLS+=		perl:run sh:run msgfmt
+USE_TOOLS+=		perl:run sh:run msgfmt bash:test
 
 REPLACE_PERL+=		*.perl */*.perl */*/*.perl
 REPLACE_PERL+=		contrib/hooks/update-paranoid
@@ -82,6 +81,12 @@ SUBST_MESSAGE.fix-cd-P=	Fixing cd arguments.
 SUBST_STAGE.fix-cd-P=	pre-build
 SUBST_SED.fix-cd-P=	-e "s/cd -P/cd/g"
 .endif
+
+SUBST_CLASSES+=			test-shell
+SUBST_FILES.test-shell=		t/Makefile
+SUBST_MESSAGE.test-shell=	Use bash as TEST_SHELL_PATH
+SUBST_STAGE.test-shell=		pre-build
+SUBST_SED.test-shell=		-e '/^TEST_SHELL_PATH/ s;$$(SHELL_PATH);${TOOLS_BASH};'
 
 LDFLAGS.SunOS+=		-lintl -lnsl
 

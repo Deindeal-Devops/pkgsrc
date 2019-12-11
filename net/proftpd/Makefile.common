@@ -1,4 +1,4 @@
-# $NetBSD: Makefile.common,v 1.9 2019/10/13 19:52:47 maya Exp $
+# $NetBSD: Makefile.common,v 1.10 2019/12/09 19:22:57 nros Exp $
 
 # used by net/proftpd/Makefile
 # used by net/proftpd/Makefile.module
@@ -46,7 +46,8 @@ SUBST_FILES.libs=	modules/mod_sql_mysql.c
 SUBST_SED.libs=		-e 's|^\(.\*\ \$$Libraries:\ \).* \$$|\1'"`mysql_config --libs`"'\ \$$|'
 
 pre-configure:
-	cd ${WRKSRC} && ${TOOLS_CMD.autoconf}
+	cd ${WRKSRC} && ${TOOLS_CMD.autoconf} &&\
+	cd contrib/mod_load && ${TOOLS_CMD.autoconf}
 
 .include "options.mk"
 

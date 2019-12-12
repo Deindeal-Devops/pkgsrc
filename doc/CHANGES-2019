@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2019,v 1.5328 2019/12/11 19:07:19 adam Exp $
+$NetBSD: CHANGES-2019,v 1.5346 2019/12/12 20:57:06 fcambus Exp $
 
 Changes to the packages collection and infrastructure in 2019:
 
@@ -8572,3 +8572,24 @@ Changes to the packages collection and infrastructure in 2019:
 	Updated comms/py-colorama to 0.4.3 [adam 2019-12-11]
 	Updated textproc/py-colored to 1.4.2 [adam 2019-12-11]
 	Updated lang/py-mypy to 0.750 [adam 2019-12-11]
+	Updated devel/py-cython to 0.29.14nb1 [adam 2019-12-11]
+	Updated graphics/py-matplotlib to 3.1.2 [adam 2019-12-11]
+	Added graphics/wld version 0.0.0.20191211 [nia 2019-12-11]
+	Added wm/swc version 0.0.0.20191211 [nia 2019-12-11]
+	Added wm/velox version 0.0.3.20191211 [nia 2019-12-11]
+	Added devel/samurai version 0.7 [ng0 2019-12-12]
+	Updated www/davical to 1.1.9.2 [hauke 2019-12-12]
+	Updated graphics/ansilove to 4.0.6 [fcambus 2019-12-12]
+	Updated net/py-botocore to 1.13.37 [adam 2019-12-12]
+	Updated net/py-boto3 to 1.10.37 [adam 2019-12-12]
+	Updated net/py-awscli to 1.16.301 [adam 2019-12-12]
+	Updated textproc/py-regex to 2019.12.9 [adam 2019-12-12]
+	Updated print/evince3 to 3.34.2 [leot 2019-12-12]
+	Updated net/unbound to 1.9.6 [he 2019-12-12]
+	Updated www/ruby-rouge to 3.14.0 [fcambus 2019-12-12]
+	Updated pkgtools/pkgin to 0.14.0 [jperkin 2019-12-12]
+	Removed textproc/ruby-builder30 [taca 2019-12-12]
+	Added chat/telepathy-qt5 version 0.9.8 [nros 2019-12-12]
+	Updated textproc/lowdown to 0.4.6 [fcambus 2019-12-12]
+	Updated fonts/spleen to 1.6.0 [fcambus 2019-12-12]
+	Updated lang/yabasic to 2.86.2 [fcambus 2019-12-12]

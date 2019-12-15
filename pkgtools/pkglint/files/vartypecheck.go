@@ -676,7 +676,7 @@ func (cv *VartypeCheck) Homepage() {
 
 // Identifier checks for valid identifiers in various contexts, limiting the
 // valid characters to A-Za-z0-9_.
-func (cv *VartypeCheck) Identifier() {
+func (cv *VartypeCheck) IdentifierDirect() {
 	if cv.Op == opUseMatch {
 		if cv.Value == cv.ValueNoVar && !matches(cv.Value, `^[\w*\-?\[\]]+$`) {
 			cv.Warnf("Invalid identifier pattern %q for %s.", cv.Value, cv.Varname)
@@ -685,8 +685,8 @@ func (cv *VartypeCheck) Identifier() {
 	}
 
 	if cv.Value != cv.ValueNoVar {
-		// TODO: Activate this warning again, or document why that is not useful.
-		//  line.logWarning("Identifiers should be given directly.")
+		cv.Errorf("Identifiers for %s must not refer to other variables.", cv.Varname)
+		return
 	}
 
 	switch {
@@ -698,6 +698,14 @@ func (cv *VartypeCheck) Identifier() {
 
 	default:
 		cv.Warnf("Invalid identifier %q.", cv.Value)
+	}
+}
+
+// Identifier checks for valid identifiers in various contexts, limiting the
+// valid characters to A-Za-z0-9_.
+func (cv *VartypeCheck) IdentifierIndirect() {
+	if cv.Value == cv.ValueNoVar {
+		cv.IdentifierDirect()
 	}
 }
 
@@ -791,8 +799,14 @@ func (cv *VartypeCheck) MachinePlatformPattern() {
 	}
 
 	if m, opsysPattern, versionPattern, archPattern := match3(pattern, reTriple); m {
+		// This is cheated, but the dynamically loaded enums are not
+		// provided in a type registry where they could be looked up
+		// by a name. The following line therefore assumes that OPSYS
+		// is an operating system name, which sounds like a safe bet.
+		btOpsys := G.Pkgsrc.vartypes.types["OPSYS"].basicType
+
 		opsysCv := cv.WithVarnameValueMatch("the operating system part of "+cv.Varname, opsysPattern)
-		BtMachineOpsys.checker(opsysCv)
+		btOpsys.checker(opsysCv)
 
 		versionCv := cv.WithVarnameValueMatch("the version part of "+cv.Varname, versionPattern)
 		versionCv.Version()

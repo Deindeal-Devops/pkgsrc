@@ -968,9 +968,41 @@ func (s *Suite) Test_VartypeCheck_Homepage(c *check.C) {
 		"WARN: filename.mk:41: HOMEPAGE should not be defined in terms of MASTER_SITEs.")
 }
 
-func (s *Suite) Test_VartypeCheck_Identifier(c *check.C) {
+func (s *Suite) Test_VartypeCheck_IdentifierDirect(c *check.C) {
 	t := s.Init(c)
-	vt := NewVartypeCheckTester(t, BtIdentifier)
+	vt := NewVartypeCheckTester(t, BtIdentifierDirect)
+
+	vt.Varname("PKGBASE")
+	vt.Values(
+		"${OTHER_VAR}",
+		"identifiers cannot contain spaces",
+		"id/cannot/contain/slashes",
+		"id-${OTHER_VAR}",
+		"")
+
+	vt.Output(
+		"ERROR: filename.mk:1: Identifiers for PKGBASE "+
+			"must not refer to other variables.",
+		"WARN: filename.mk:2: Invalid identifier \"identifiers cannot contain spaces\".",
+		"WARN: filename.mk:3: Invalid identifier \"id/cannot/contain/slashes\".",
+		"ERROR: filename.mk:4: Identifiers for PKGBASE "+
+			"must not refer to other variables.",
+		"WARN: filename.mk:5: Invalid identifier \"\".")
+
+	vt.Op(opUseMatch)
+	vt.Values(
+		"[A-Z]",
+		"[A-Z.]",
+		"${PKG_OPTIONS:Moption}",
+		"A*B")
+
+	vt.Output(
+		"WARN: filename.mk:12: Invalid identifier pattern \"[A-Z.]\" for PKGBASE.")
+}
+
+func (s *Suite) Test_VartypeCheck_IdentifierIndirect(c *check.C) {
+	t := s.Init(c)
+	vt := NewVartypeCheckTester(t, BtIdentifierIndirect)
 
 	vt.Varname("MYSQL_CHARSET")
 	vt.Values(
@@ -1144,8 +1176,7 @@ func (s *Suite) Test_VartypeCheck_MachinePlatform(c *check.C) {
 	vt.Output(
 		"WARN: filename.mk:1: \"linux-i386\" is not a valid platform pattern.",
 		"WARN: filename.mk:2: The pattern \"nextbsd\" cannot match any of "+
-			"{ AIX BSDOS Bitrig Cygwin Darwin DragonFly FreeBSD FreeMiNT GNUkFreeBSD HPUX Haiku "+
-			"IRIX Interix Linux Minix MirBSD NetBSD OSF1 OpenBSD QNX SCO_SV SunOS UnixWare "+
+			"{ Cygwin DragonFly FreeBSD Linux NetBSD SunOS "+
 			"} for the operating system part of MACHINE_PLATFORM.",
 		"WARN: filename.mk:2: The pattern \"8087\" cannot match any of "+
 			"{ aarch64 aarch64eb alpha amd64 arc arm arm26 arm32 "+
@@ -1159,8 +1190,7 @@ func (s *Suite) Test_VartypeCheck_MachinePlatform(c *check.C) {
 			"rs6000 s390 sh3eb sh3el sparc sparc64 vax x86_64 "+
 			"} for the hardware architecture part of MACHINE_PLATFORM.",
 		"WARN: filename.mk:3: The pattern \"netbsd\" cannot match any of "+
-			"{ AIX BSDOS Bitrig Cygwin Darwin DragonFly FreeBSD FreeMiNT GNUkFreeBSD HPUX Haiku "+
-			"IRIX Interix Linux Minix MirBSD NetBSD OSF1 OpenBSD QNX SCO_SV SunOS UnixWare "+
+			"{ Cygwin DragonFly FreeBSD Linux NetBSD SunOS "+
 			"} for the operating system part of MACHINE_PLATFORM.",
 		"WARN: filename.mk:3: The pattern \"l*\" cannot match any of "+
 			"{ aarch64 aarch64eb alpha amd64 arc arm arm26 arm32 "+
@@ -1195,8 +1225,7 @@ func (s *Suite) Test_VartypeCheck_MachinePlatformPattern(c *check.C) {
 	vt.Output(
 		"WARN: filename.mk:1: \"linux-i386\" is not a valid platform pattern.",
 		"WARN: filename.mk:2: The pattern \"nextbsd\" cannot match any of "+
-			"{ AIX BSDOS Bitrig Cygwin Darwin DragonFly FreeBSD FreeMiNT GNUkFreeBSD HPUX Haiku "+
-			"IRIX Interix Linux Minix MirBSD NetBSD OSF1 OpenBSD QNX SCO_SV SunOS UnixWare "+
+			"{ Cygwin DragonFly FreeBSD Linux NetBSD SunOS "+
 			"} for the operating system part of ONLY_FOR_PLATFORM.",
 		"WARN: filename.mk:2: The pattern \"8087\" cannot match any of "+
 			"{ aarch64 aarch64eb alpha amd64 arc arm arm26 arm32 "+
@@ -1210,8 +1239,7 @@ func (s *Suite) Test_VartypeCheck_MachinePlatformPattern(c *check.C) {
 			"rs6000 s390 sh3eb sh3el sparc sparc64 vax x86_64 "+
 			"} for the hardware architecture part of ONLY_FOR_PLATFORM.",
 		"WARN: filename.mk:3: The pattern \"netbsd\" cannot match any of "+
-			"{ AIX BSDOS Bitrig Cygwin Darwin DragonFly FreeBSD FreeMiNT GNUkFreeBSD HPUX Haiku "+
-			"IRIX Interix Linux Minix MirBSD NetBSD OSF1 OpenBSD QNX SCO_SV SunOS UnixWare "+
+			"{ Cygwin DragonFly FreeBSD Linux NetBSD SunOS "+
 			"} for the operating system part of ONLY_FOR_PLATFORM.",
 		"WARN: filename.mk:3: The pattern \"l*\" cannot match any of "+
 			"{ aarch64 aarch64eb alpha amd64 arc arm arm26 arm32 "+

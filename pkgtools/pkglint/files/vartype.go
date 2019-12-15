@@ -351,7 +351,8 @@ func (bt *BasicType) NeedsQ() bool {
 		BtEmulPlatform,
 		BtFileMode,
 		BtFilename,
-		BtIdentifier,
+		BtIdentifierDirect,
+		BtIdentifierIndirect,
 		BtInteger,
 		BtMachineGnuPlatform,
 		BtMachinePlatform,
@@ -419,7 +420,8 @@ var (
 	BtFileMode               = &BasicType{"FileMode", (*VartypeCheck).FileMode}
 	BtGccReqd                = &BasicType{"GccReqd", (*VartypeCheck).GccReqd}
 	BtHomepage               = &BasicType{"Homepage", (*VartypeCheck).Homepage}
-	BtIdentifier             = &BasicType{"Identifier", (*VartypeCheck).Identifier}
+	BtIdentifierDirect       = &BasicType{"Identifier", (*VartypeCheck).IdentifierDirect}
+	BtIdentifierIndirect     = &BasicType{"Identifier", (*VartypeCheck).IdentifierIndirect}
 	BtInteger                = &BasicType{"Integer", (*VartypeCheck).Integer}
 	BtLdFlag                 = &BasicType{"LdFlag", (*VartypeCheck).LdFlag}
 	BtLicense                = &BasicType{"License", (*VartypeCheck).License}
@@ -465,14 +467,12 @@ var (
 	BtYesNo                  = &BasicType{"YesNo", (*VartypeCheck).YesNo}
 	BtYesNoIndirectly        = &BasicType{"YesNoIndirectly", (*VartypeCheck).YesNoIndirectly}
 
-	BtMachineOpsys            = enumFromValues(machineOpsysValues)
 	BtMachineArch             = enumFromValues(machineArchValues)
 	BtMachineGnuArch          = enumFromValues(machineGnuArchValues)
 	BtEmulOpsys               = enumFromValues(emulOpsysValues)
 	BtEmulArch                = enumFromValues(machineArchValues) // Just a wild guess.
 	BtMachineGnuPlatformOpsys = BtEmulOpsys
 
-	btCond    = &BasicType{".if condition", nil /* never called */}
 	btForLoop = &BasicType{".for loop", nil /* never called */}
 )
 
@@ -489,10 +489,6 @@ func init() {
 // TODO: Move these values to VarTypeRegistry.Init and read them from the
 //  pkgsrc infrastructure files, as far as possible.
 const (
-	machineOpsysValues = "" + // See mk/platform
-		"AIX BSDOS Bitrig Cygwin Darwin DragonFly FreeBSD FreeMiNT GNUkFreeBSD " +
-		"HPUX Haiku IRIX Interix Linux Minix MirBSD NetBSD OSF1 OpenBSD QNX SCO_SV SunOS UnixWare"
-
 	// See mk/emulator/emulator-vars.mk.
 	emulOpsysValues = "" +
 		"bitrig bsdos cygwin darwin dragonfly freebsd " +

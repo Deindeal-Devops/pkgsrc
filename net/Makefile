@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1278 2019/11/19 14:31:22 wiz Exp $
+# $NetBSD: Makefile,v 1.1281 2019/12/16 18:07:40 nia Exp $
 #
 
 COMMENT=	Networking tools
@@ -47,8 +47,6 @@ SUBDIR+=	bird
 SUBDIR+=	bird6
 SUBDIR+=	bittornado
 SUBDIR+=	bittornado-gui
-SUBDIR+=	bittorrent
-SUBDIR+=	bittorrent-gui
 SUBDIR+=	bmon
 SUBDIR+=	bounce
 SUBDIR+=	bridged
@@ -327,6 +325,7 @@ SUBDIR+=	libsoup
 SUBDIR+=	libsscript
 SUBDIR+=	libtelnet
 SUBDIR+=	libtorrent
+SUBDIR+=	libtorrent-rasterbar
 SUBDIR+=	libtrace
 SUBDIR+=	libupnp
 SUBDIR+=	libvncserver
@@ -736,6 +735,7 @@ SUBDIR+=	py-zeep
 SUBDIR+=	py-zmq
 SUBDIR+=	pygopherd
 SUBDIR+=	qadsl
+SUBDIR+=	qbittorrent
 SUBDIR+=	quagga
 SUBDIR+=	queryperf
 SUBDIR+=	quvi

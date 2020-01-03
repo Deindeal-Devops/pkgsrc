@@ -1,7 +1,6 @@
-# $NetBSD: Makefile,v 1.2 2014/11/23 12:52:32 szptvlfn Exp $
+# $NetBSD: Makefile,v 1.4 2020/01/02 02:47:31 pho Exp $
 
-DISTNAME=	MonadRandom-0.3
-PKGREVISION=	1
+DISTNAME=	MonadRandom-0.5.1.1
 CATEGORIES=	devel
 
 MAINTAINER=	szptvlfn@NetBSD.org
@@ -11,6 +10,8 @@ LICENSE=	2-clause-bsd
 
 .include "../../mk/haskell.mk"
 .include "../../devel/hs-mtl/buildlink3.mk"
+.include "../../devel/hs-primitive/buildlink3.mk"
 .include "../../devel/hs-random/buildlink3.mk"
-.include "../../devel/hs-transformers/buildlink3.mk"
+.include "../../devel/hs-transformers-compat/buildlink3.mk"
+.include "../../devel/hs-fail/buildlink3.mk"
 .include "../../mk/bsd.pkg.mk"

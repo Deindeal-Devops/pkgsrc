@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2977 2020/01/03 07:52:42 pho Exp $
+# $NetBSD: Makefile,v 1.2981 2020/01/06 19:17:04 ng0 Exp $
 #
 
 COMMENT=	Development utilities
@@ -668,7 +668,6 @@ SUBDIR+=	libfirm
 SUBDIR+=	libfreefare
 SUBDIR+=	libftdi
 SUBDIR+=	libftdi1
-SUBDIR+=	libgail-gnome
 SUBDIR+=	libgcroots
 SUBDIR+=	libgee
 SUBDIR+=	libgee0.6
@@ -2032,6 +2031,7 @@ SUBDIR+=	pthread-sem
 SUBDIR+=	ptlib
 SUBDIR+=	pvs
 SUBDIR+=	pwlib
+SUBDIR+=	py-Deprecated
 SUBDIR+=	py-InlineEgg
 SUBDIR+=	py-Optik
 SUBDIR+=	py-ParamUnittest
@@ -2541,6 +2541,7 @@ SUBDIR+=	readline
 SUBDIR+=	rebar
 SUBDIR+=	rebar3
 SUBDIR+=	refinecvs
+SUBDIR+=	remake
 SUBDIR+=	reposurgeon
 SUBDIR+=	rgbds
 SUBDIR+=	ropper

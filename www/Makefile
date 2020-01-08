@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1419 2019/12/17 09:38:00 leot Exp $
+# $NetBSD: Makefile,v 1.1421 2020/01/05 19:38:02 kim Exp $
 #
 
 COMMENT=	Packages related to the World Wide Web
@@ -943,6 +943,7 @@ SUBDIR+=	spawn-fcgi
 SUBDIR+=	spdylay
 SUBDIR+=	sqtop
 SUBDIR+=	squid3
+SUBDIR+=	squid4
 SUBDIR+=	squidGuard
 SUBDIR+=	squidanalyzer
 SUBDIR+=	squidclamav
@@ -993,7 +994,6 @@ SUBDIR+=	weex
 SUBDIR+=	whisker
 SUBDIR+=	wiliki
 SUBDIR+=	wmd
-SUBDIR+=	wml
 SUBDIR+=	wordpress
 SUBDIR+=	wslay
 SUBDIR+=	www6to4

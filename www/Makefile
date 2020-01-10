@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.1421 2020/01/05 19:38:02 kim Exp $
+# $NetBSD: Makefile,v 1.1423 2020/01/08 20:58:29 adam Exp $
 #
 
 COMMENT=	Packages related to the World Wide Web
@@ -737,12 +737,14 @@ SUBDIR+=	py-grappelli_safe
 SUBDIR+=	py-gunicorn
 SUBDIR+=	py-h11
 SUBDIR+=	py-h2
+SUBDIR+=	py-hstspreload
 SUBDIR+=	py-http-parser
 SUBDIR+=	py-http_ece
 SUBDIR+=	py-httpbin
 SUBDIR+=	py-httpie
 SUBDIR+=	py-httplib2
 SUBDIR+=	py-httptools
+SUBDIR+=	py-httpx
 SUBDIR+=	py-hyperframe
 SUBDIR+=	py-hyperlink
 SUBDIR+=	py-idna
@@ -775,6 +777,7 @@ SUBDIR+=	py-python3-digest
 SUBDIR+=	py-pywebdav
 SUBDIR+=	py-raven
 SUBDIR+=	py-recaptcha
+SUBDIR+=	py-rfc3986
 SUBDIR+=	py-robobrowser
 SUBDIR+=	py-rss2gen
 SUBDIR+=	py-sanic
@@ -796,6 +799,7 @@ SUBDIR+=	py-trytond-webdav
 SUBDIR+=	py-twill
 SUBDIR+=	py-uliweb
 SUBDIR+=	py-urllib3
+SUBDIR+=	py-uvicorn
 SUBDIR+=	py-uwsgi
 SUBDIR+=	py-uwsgitop
 SUBDIR+=	py-w3lib

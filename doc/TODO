@@ -1,4 +1,4 @@
-$NetBSD: TODO,v 1.19598 2020/01/10 12:50:00 wiz Exp $
+$NetBSD: TODO,v 1.19601 2020/01/11 05:12:43 mef Exp $
 
 Suggested new packages
 ======================
@@ -488,7 +488,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o classpath-0.99
 	o classpath-gui-0.99
 	o clawsker-0.7.13
-	o cloc-1.82
 	o clusterssh-4.05
 	o codeblocks-17.12
 	o colorize-0.3.4
@@ -688,7 +687,7 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o gperiodic-3.0.2
 	o gps-6.1.1
 	o gramofile-1.6P
-	o gramps-5.0.2
+	o gramps-5.1.2
 	o grantlee-5.0.0
 	o greed-4.1
 	o grilo-0.2.12
@@ -997,7 +996,6 @@ For possible Perl packages updates, see http://www.NetBSD.org/~wiz/perl.html.
 	o policyd-weight-0.1.15.2
 	o polkit-0.116 [needs mozjs-60]
 	o poppass-4.0.14
-	o poppler-0.84.0
 	o postal-0.72
 	o pound-2.8a
 	o povray-3.7.0.0

@@ -1,4 +1,4 @@
-$NetBSD: CHANGES-2020,v 1.344 2020/01/11 14:40:53 nia Exp $
+$NetBSD: CHANGES-2020,v 1.357 2020/01/12 19:44:41 khorben Exp $
 
 Changes to the packages collection and infrastructure in 2020:
 
@@ -405,3 +405,26 @@ Changes to the packages collection and infrastructure in 2020:
 	Updated devel/R-Rcpp to 1.0.3 [mef 2020-01-11]
 	Removed devel/hs-mtl [pho 2020-01-11]
 	Updated graphics/freeimage to 3.18.0 [nia 2020-01-11]
+	Added graphics/imv version 4.1.0 [nia 2020-01-11]
+	Updated pkgtools/pkglint to 19.4.3 [rillig 2020-01-11]
+	Added sysutils/dmenu-wld version 4.6.0.20191014 [nia 2020-01-11]
+	Updated textproc/py-yaml to 5.3 [adam 2020-01-11]
+	Updated net/py-lexicon to 3.3.16 [adam 2020-01-11]
+	Updated devel/py-wcwidth to 0.1.8 [adam 2020-01-11]
+	Updated devel/py-pygit2 to 1.0.2 [adam 2020-01-11]
+	Updated wm/velox to 0.0.3.20200111 [nia 2020-01-11]
+	Updated wm/swc to 0.0.0.20200111 [nia 2020-01-11]
+	Updated x11/deforaos-keyboard to 0.4.0 [khorben 2020-01-12]
+	Updated mail/deforaos-mailer to 0.2.0 [khorben 2020-01-12]
+	Updated devel/boost-build to 1.72.0 [adam 2020-01-12]
+	Updated devel/boost-docs to 1.72.0 [adam 2020-01-12]
+	Updated devel/boost-headers to 1.72.0 [adam 2020-01-12]
+	Updated devel/boost-jam to 1.72.0 [adam 2020-01-12]
+	Updated devel/boost-libs to 1.72.0 [adam 2020-01-12]
+	Updated devel/boost-mpi to 1.72.0 [adam 2020-01-12]
+	Updated devel/py-boost to 1.72.0 [adam 2020-01-12]
+	Updated meta-pkgs/boost to 1.72.0 [adam 2020-01-12]
+	Updated fonts/public-sans to 1.008 [mef 2020-01-12]
+	Updated net/sayaka to 3.4.1 [tsutsui 2020-01-12]
+	Updated devel/R-callr to 3.4.0 [mef 2020-01-12]
+	Updated net/deforaos-vncviewer to 0.1.0 [khorben 2020-01-12]

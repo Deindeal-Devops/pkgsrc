@@ -1,4 +1,4 @@
-# $NetBSD: Makefile,v 1.2988 2020/01/11 14:30:56 pho Exp $
+# $NetBSD: Makefile,v 1.2990 2020/01/13 01:53:38 mef Exp $
 #
 
 COMMENT=	Development utilities
@@ -15,8 +15,8 @@ SUBDIR+=	R-BH
 SUBDIR+=	R-IRdisplay
 SUBDIR+=	R-IRkernel
 SUBDIR+=	R-R6
-SUBDIR+=	R-Rcpp
 SUBDIR+=	R-RUnit
+SUBDIR+=	R-Rcpp
 SUBDIR+=	R-assertthat
 SUBDIR+=	R-bindr
 SUBDIR+=	R-bit
@@ -25,6 +25,7 @@ SUBDIR+=	R-blob
 SUBDIR+=	R-callr
 SUBDIR+=	R-checkmate
 SUBDIR+=	R-cli
+SUBDIR+=	R-cliapp
 SUBDIR+=	R-clipr
 SUBDIR+=	R-covr
 SUBDIR+=	R-crayon
@@ -45,6 +46,7 @@ SUBDIR+=	R-pkgbuild
 SUBDIR+=	R-pkgconfig
 SUBDIR+=	R-pkgload
 SUBDIR+=	R-plogr
+SUBDIR+=	R-prettycode
 SUBDIR+=	R-proto
 SUBDIR+=	R-purrr
 SUBDIR+=	R-rcmdcheck
